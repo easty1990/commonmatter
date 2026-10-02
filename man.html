@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f4ee">
+  <title>Men's Collection — Common Matter</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Manrope:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f7f4ee;
+      --ink: #29251f;
+      --muted: #77716a;
+      --line: #ded9d0;
+      --dark: #29221d;
+      --rust: #895b45;
+      --gutter: clamp(16px, 2.55vw, 38px);
+      font-family: "DM Sans", "Manrope", sans-serif;
+      color: var(--ink);
+      background: var(--paper);
+      font-synthesis: none;
+      text-rendering: optimizeLegibility;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; min-width: 320px; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    a { color: inherit; text-decoration: none; }
+    button { color: inherit; font: inherit; }
+    .announcement { min-height: 24px; display: grid; place-items: center; padding: 5px 12px; background: var(--dark); color: #f5f0e9; font-size: 9px; text-align: center; }
+    .site-header { position: relative; z-index: 2; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; min-height: 42px; padding: 0 var(--gutter); background: var(--paper); border-bottom: 1px solid rgba(41, 37, 31, .08); }
+    .nav-links, .header-actions { display: flex; align-items: center; gap: clamp(13px, 2vw, 28px); }
+    .nav-links a, .header-actions a { padding: 10px 0; color: var(--ink); font-size: 9px; text-transform: lowercase; }
+    .nav-links a:hover, .header-actions a:hover, .text-link:hover { color: var(--rust); }
+    .brand { font-family: "Manrope", sans-serif; font-size: 11px; font-weight: 500; white-space: nowrap; word-spacing: 5px; }
+    .header-actions { justify-content: flex-end; }
+    .hero { position: relative; min-height: 430px; height: min(55vw, 620px); max-height: calc(100svh - 66px); overflow: hidden; background: #5e5a55; color: white; isolation: isolate; }
+    .hero::after { position: absolute; z-index: -1; inset: 0; content: ""; background: linear-gradient(90deg, rgba(17, 16, 15, .3), transparent 72%), linear-gradient(0deg, rgba(17, 16, 15, .4), transparent 34%); }
+    .hero-image { position: absolute; z-index: -2; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 42%; filter: grayscale(1) brightness(.78); animation: arrive 1s ease-out both; }
+    .hero-caption { position: absolute; bottom: clamp(22px, 3.2vw, 46px); left: var(--gutter); display: grid; justify-items: start; gap: 9px; font-size: 10px; text-transform: lowercase; }
+    .hero-title { max-width: 480px; margin: 0 0 4px; font-family: "Manrope", sans-serif; font-size: clamp(27px, 4vw, 48px); font-weight: 400; line-height: 1.1; }
+    .text-link { border-bottom: 1px solid currentColor; padding-bottom: 2px; transition: color .2s ease; }
+    .hero .text-link:hover { color: #e4c8b4; }
+    .manifesto { min-height: 220px; display: grid; place-items: center; padding: 52px 24px; text-align: center; }
+    .manifesto p { max-width: 400px; margin: 0; font-family: "Manrope", sans-serif; font-size: clamp(18px, 2vw, 21px); line-height: 1.55; }
+    .content { padding: 0 var(--gutter) 76px; }
+    .section-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .section-label, .view-all { color: #5f5952; font-size: 9px; text-transform: lowercase; }
+    .category-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: clamp(10px, 2vw, 28px); }
+    .category-button { display: block; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; cursor: pointer; }
+    .category-image { display: block; aspect-ratio: .76; overflow: hidden; background: #e6e2dc; }
+    .category-image img, .product-image img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .7s cubic-bezier(.2, .7, .2, 1); }
+    .category-button:hover img, .category-button:focus-visible img { transform: scale(1.025); }
+    .category-name { display: flex; justify-content: space-between; gap: 8px; padding-top: 9px; color: #5f5952; font-size: 9px; text-transform: lowercase; }
+    .category-button[aria-pressed="true"] .category-name { color: var(--ink); }
+    .category-button[aria-pressed="true"] .category-name::after { content: "selected"; color: var(--muted); font-size: 8px; }
+    .collection { padding-top: clamp(48px, 7vw, 84px); }
+    .product-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(14px, 2.6vw, 36px); row-gap: 38px; }
+    .product[hidden] { display: none; }
+    .product-image { position: relative; aspect-ratio: .78; overflow: hidden; background: #e6e2dc; }
+    .product:hover .product-image img { transform: scale(1.025); }
+    .add-button { position: absolute; right: 10px; bottom: 10px; left: 10px; min-height: 38px; border: 0; background: rgba(247, 244, 238, .94); cursor: pointer; font-size: 10px; opacity: 0; transform: translateY(5px); transition: opacity .2s ease, transform .2s ease, background .2s ease; }
+    .product:hover .add-button, .add-button:focus-visible { opacity: 1; transform: translateY(0); }
+    .add-button:hover { background: white; }
+    .product-meta { display: flex; justify-content: space-between; gap: 12px; padding-top: 10px; font-size: 9px; text-transform: lowercase; }
+    .product-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .product-price { flex: 0 0 auto; color: var(--muted); }
+    .site-footer { display: flex; justify-content: space-between; gap: 24px; padding: 24px var(--gutter); border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a:hover { color: var(--ink); }
+    @keyframes arrive { from { transform: scale(1.025); opacity: .6; } to { transform: scale(1); opacity: 1; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; } }
+    @media (max-width: 760px) {
+      .category-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
+      .product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 640px) {
+      .site-header { min-height: 52px; grid-template-columns: 1fr auto; }
+      .brand { grid-column: 1; grid-row: 1; justify-self: start; }
+      .nav-links { display: none; }
+      .header-actions { grid-column: 2; grid-row: 1; }
+      .hero { min-height: 460px; height: 72svh; max-height: 680px; }
+      .hero-image { object-position: 54% center; }
+      .manifesto { min-height: 190px; }
+      .category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 12px; }
+      .product-grid { column-gap: 12px; row-gap: 30px; }
+      .add-button { position: static; width: 100%; min-height: 36px; margin-top: 8px; opacity: 1; transform: none; }
+      .category-image { aspect-ratio: .82; }
+      .site-footer { flex-direction: column; }
+    }
+    @media (max-width: 380px) { .category-grid, .product-grid { column-gap: 9px; } }
+  </style>
+</head>
+<body>
+  <div class="announcement">Autumn winter 26. Concept site: products and prices are placeholders.</div>
+  <header class="site-header">
+    <nav class="nav-links" aria-label="Main navigation">
+      <a href="man.html" aria-current="page">man</a>
+      <a href="index.html#collections">looks</a>
+      <a href="experiences.html">experience</a>
+    </nav>
+    <a class="brand" href="index.html#top" aria-label="Common Matter home">COMMON MATTER</a>
+    <div class="header-actions"><a href="index.html#new-arrivals">shop</a><a href="bag.html">bag (<span class="bag-count">0</span>)</a></div>
+  </header>
+  <main id="top">
+    <section class="hero" aria-label="Common Matter men's collection">
+      <img class="hero-image" src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&amp;fit=crop&amp;w=2400&amp;q=90" alt="Autumn campaign look in a dramatic outdoor setting">
+      <div class="hero-caption">
+        <h1 class="hero-title">Considered pieces, worn your way.</h1>
+        <span>common matter menswear</span>
+        <a class="text-link" href="#categories">explore the collection</a>
+      </div>
+    </section>
+    <section class="manifesto"><p>Familiar forms, made with care. Find the pieces that feel like your own.</p></section>
+    <div class="content">
+      <section id="categories" aria-labelledby="category-heading">
+        <div class="section-heading"><span class="section-label" id="category-heading">shop by category</span><span class="view-all">autumn winter 26</span></div>
+        <div class="category-grid" role="group" aria-label="Filter men's collection">
+          <button class="category-button" type="button" data-filter="looks" aria-pressed="true"><span class="category-image"><img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Complete autumn outfit" loading="lazy"></span><span class="category-name">looks</span></button>
+          <button class="category-button" type="button" data-filter="jackets" aria-pressed="false"><span class="category-image"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Dark textured jacket" loading="lazy"></span><span class="category-name">jackets</span></button>
+          <button class="category-button" type="button" data-filter="trousers" aria-pressed="false"><span class="category-image"><img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Relaxed tailored trousers" loading="lazy"></span><span class="category-name">trousers</span></button>
+          <button class="category-button" type="button" data-filter="t-shirts" aria-pressed="false"><span class="category-image"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Everyday cotton t-shirt" loading="lazy"></span><span class="category-name">t-shirts</span></button>
+          <button class="category-button" type="button" data-filter="shirts" aria-pressed="false"><span class="category-image"><img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&amp;fit=crop&amp;w=900&amp;q=85" alt="Classic cotton shirt" loading="lazy"></span><span class="category-name">shirts</span></button>
+        </div>
+      </section>
+      <section class="collection" id="collection" aria-labelledby="collection-heading">
+        <div class="section-heading"><span class="section-label" id="collection-heading">looks</span><a class="view-all text-link" href="#categories" data-reset>view categories</a></div>
+        <div class="product-grid">
+          <article class="product" data-category="looks"><div class="product-image"><img src="https://images.unsplash.com/photo-1529139574466-a303027c1d8b?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Autumn layers styled as a complete look" loading="lazy"></div><div class="product-meta"><span class="product-name">the everyday uniform</span><span class="product-price">$420</span></div></article>
+          <article class="product" data-category="looks"><div class="product-image"><img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="A considered layered outfit" loading="lazy"></div><div class="product-meta"><span class="product-name">the weekend set</span><span class="product-price">$365</span></div></article>
+          <article class="product" data-category="jackets"><div class="product-image"><img src="https://images.unsplash.com/photo-1591047139829-d91aecb6caea?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Washed cotton jacket" loading="lazy"></div><div class="product-meta"><span class="product-name">washed cotton jacket</span><span class="product-price">$285</span></div></article>
+          <article class="product" data-category="jackets"><div class="product-image"><img src="https://images.unsplash.com/photo-1551028719-00167b16eac5?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Relaxed dark field jacket" loading="lazy"></div><div class="product-meta"><span class="product-name">relaxed field jacket</span><span class="product-price">$310</span></div></article>
+          <article class="product" data-category="trousers"><div class="product-image"><img src="https://images.unsplash.com/photo-1473966968600-fa801b869a1a?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Relaxed wool trouser" loading="lazy"></div><div class="product-meta"><span class="product-name">relaxed wool trouser</span><span class="product-price">$195</span></div></article>
+          <article class="product" data-category="trousers"><div class="product-image"><img src="https://images.unsplash.com/photo-1506629905607-d9b1f9e8c7aa?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Pleated everyday trouser" loading="lazy"></div><div class="product-meta"><span class="product-name">pleated everyday trouser</span><span class="product-price">$210</span></div></article>
+          <article class="product" data-category="t-shirts"><div class="product-image"><img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Heavyweight cotton t-shirt" loading="lazy"></div><div class="product-meta"><span class="product-name">heavyweight cotton tee</span><span class="product-price">$75</span></div></article>
+          <article class="product" data-category="t-shirts"><div class="product-image"><img src="https://images.unsplash.com/photo-1523381210434-271e8be1f52b?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Relaxed everyday cotton t-shirt" loading="lazy"></div><div class="product-meta"><span class="product-name">relaxed everyday tee</span><span class="product-price">$68</span></div></article>
+          <article class="product" data-category="shirts"><div class="product-image"><img src="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Soft cotton button shirt" loading="lazy"></div><div class="product-meta"><span class="product-name">soft cotton button shirt</span><span class="product-price">$155</span></div></article>
+          <article class="product" data-category="shirts"><div class="product-image"><img src="https://images.unsplash.com/photo-1603252110481-7ba873bf42ab?auto=format&amp;fit=crop&amp;w=1000&amp;q=85" alt="Textured overshirt in a natural tone" loading="lazy"></div><div class="product-meta"><span class="product-name">textured overshirt</span><span class="product-price">$185</span></div></article>
+        </div>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer"><span>COMMON MATTER — AUTUMN WINTER 26</span><nav class="footer-links" aria-label="Footer navigation"><a href="experiences.html">experiences</a><a href="mailto:hello@commonmatter.example">contact</a><a href="#top">back to top</a></nav></footer>
+  <script>
+    const categoryButtons = [...document.querySelectorAll(".category-button")];
+    const products = [...document.querySelectorAll(".product")];
+    const collectionHeading = document.querySelector("#collection-heading");
+    const bagStorageKey = "common-matter-bag";
+    let bag = [];
+    try {
+      const storedBag = JSON.parse(localStorage.getItem(bagStorageKey) || "[]");
+      bag = Array.isArray(storedBag) ? storedBag : [];
+    } catch {
+      bag = [];
+    }
+    document.querySelector(".bag-count").textContent = String(bag.reduce((count, item) => count + item.quantity, 0));
+
+    products.forEach((product) => {
+      const addButton = document.createElement("button");
+      addButton.className = "add-button";
+      addButton.type = "button";
+      addButton.textContent = "add to bag";
+      addButton.addEventListener("click", () => {
+        const name = product.querySelector(".product-name").textContent;
+        const id = `${product.dataset.category}:${name}`;
+        const item = bag.find((entry) => entry.id === id);
+        if (item) {
+          item.quantity += 1;
+        } else {
+          bag.push({
+            id,
+            name,
+            price: Number(product.querySelector(".product-price").textContent.replace("$", "")),
+            image: product.querySelector("img").src,
+            quantity: 1
+          });
+        }
+        try { localStorage.setItem(bagStorageKey, JSON.stringify(bag)); } catch {}
+        document.querySelector(".bag-count").textContent = String(bag.reduce((count, entry) => count + entry.quantity, 0));
+        addButton.textContent = "added to bag";
+        window.setTimeout(() => { addButton.textContent = "add to bag"; }, 1200);
+      });
+      product.querySelector(".product-image").append(addButton);
+    });
+
+    function showCategory(category) {
+      categoryButtons.forEach((button) => button.setAttribute("aria-pressed", String(button.dataset.filter === category)));
+      products.forEach((product) => { product.hidden = product.dataset.category !== category; });
+      collectionHeading.textContent = category;
+      document.querySelector("#collection").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    categoryButtons.forEach((button) => button.addEventListener("click", () => showCategory(button.dataset.filter)));
+    document.querySelector("[data-reset]").addEventListener("click", (event) => {
+      event.preventDefault();
+      categoryButtons.forEach((button) => button.setAttribute("aria-pressed", "false"));
+      products.forEach((product) => { product.hidden = false; });
+      collectionHeading.textContent = "all pieces";
+    });
+  </script>
+</body>
+</html>
